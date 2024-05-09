@@ -1,7 +1,8 @@
-import { View, Text, TextInput } from "react-native";
-import React from "react";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
 import { constant } from "../../utils/constants";
 import { useRoute } from "@react-navigation/native";
+import Feather from "@expo/vector-icons/Feather";
 
 interface IInput {
 	placeholder: string;
@@ -9,7 +10,9 @@ interface IInput {
 	style?: Object;
 	marginBottom?: number;
 	onChange?: () => void;
-	value?: string
+	value?: string;
+	errorMessage?: string | undefined;
+	secureTextEntry?: boolean;
 }
 
 const Input = ({
@@ -18,10 +21,20 @@ const Input = ({
 	style,
 	marginBottom = 20,
 	onChange,
-	value
+	value,
+	errorMessage,
+	secureTextEntry = false,
 }: IInput) => {
+
+	const [showPassword, setShowPassword] = useState<boolean>(secureTextEntry)
+
 	return (
-		<View style={[{ marginBottom: marginBottom }, style]}>
+		<View
+			style={[
+				{ marginBottom: marginBottom, position: "relative" },
+				style,
+			]}
+		>
 			{children && (
 				<Text
 					style={{ fontSize: 16, fontWeight: "600", marginBottom: 8 }}
@@ -34,6 +47,7 @@ const Input = ({
 				autoComplete="off"
 				autoCorrect={false}
 				onChangeText={onChange}
+				secureTextEntry={showPassword}
 				value={value}
 				style={{
 					backgroundColor: constant.grayF7,
@@ -42,6 +56,29 @@ const Input = ({
 					borderRadius: 8,
 				}}
 			/>
+			{secureTextEntry && (
+				<TouchableOpacity activeOpacity={0.6} onPress={() => setShowPassword(!showPassword)}>
+					<Feather
+						name={showPassword ? 'eye-off' : 'eye'}
+						size={16}
+						style={{ position: "absolute", right: 16, bottom: 14 }}
+						color={constant.grayAD}
+					></Feather>
+				</TouchableOpacity>
+			)}
+			{errorMessage && (
+				<Text
+					style={{
+						color: "red",
+						position: "absolute",
+						bottom: -16,
+						left: 10,
+						fontSize: 12,
+					}}
+				>
+					{errorMessage}
+				</Text>
+			)}
 		</View>
 	);
 };

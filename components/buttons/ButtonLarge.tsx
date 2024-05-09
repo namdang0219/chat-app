@@ -1,13 +1,21 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+	View,
+	Text,
+	TouchableOpacity,
+	StyleSheet,
+	ActivityIndicator,
+} from "react-native";
 import React from "react";
 import { constant } from "../../utils/constants";
 
 const ButtonLarge = ({
 	children,
 	onPress,
+	loading = false,
 }: {
 	children: React.ReactNode;
 	onPress?: () => void;
+	loading?: boolean;
 }) => {
 	return (
 		<TouchableOpacity
@@ -15,7 +23,11 @@ const ButtonLarge = ({
 			activeOpacity={0.75}
 			style={styles.button}
 		>
-			<Text style={styles.content}>{children}</Text>
+			{loading ? (
+				<ActivityIndicator color={'white'} />
+			) : (
+				<Text style={styles.content}>{children}</Text>
+			)}
 		</TouchableOpacity>
 	);
 };
@@ -32,7 +44,6 @@ const styles = StyleSheet.create({
 		color: constant.grayF7,
 		fontSize: 16,
 		fontWeight: "600",
-		
 	},
 });
 
